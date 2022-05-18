@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Asp.NetMVCApi_DAL.Implementations
 {
-    public class UnitOfWork
+    public class UnitOfWork:IUnitOfWork
     {
         protected MyContext _myContext;
         public IStudentRepo StudentRepo { get; }

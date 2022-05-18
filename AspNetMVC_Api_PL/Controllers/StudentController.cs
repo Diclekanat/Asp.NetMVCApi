@@ -11,6 +11,7 @@ using Asp.NetMVCApi_EL.ViewModels;
 
 namespace AspNetMVC_Api_PL.Controllers
 {
+    [System.Web.Http.RoutePrefix("s")]
     public class StudentController : ApiController
     {
         private readonly IStudentService _studentService;
@@ -22,11 +23,12 @@ namespace AspNetMVC_Api_PL.Controllers
 
         // GET api/<controller>
 
+        [System.Web.Http.Route("")]
         public ResponseData GetAllStudents()
         {
             try
             {
-                var result = _studentService.GetAllStudents();
+                var result = _studentService.GetAllStudents().Data;
                 return new ResponseData() { IsSuccess = true, Data = result };
             }
             catch (Exception ex)
