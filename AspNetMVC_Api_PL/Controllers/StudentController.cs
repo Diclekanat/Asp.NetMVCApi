@@ -48,6 +48,9 @@ namespace AspNetMVCApi_PL.Controllers
 
         // GET api/<controller>/5
 
+        //POST s--> prefix ile böyle çağrılır.
+        //POST api/student/GetAllStudents
+
         //öğrenci ekleme
         [HttpPost]
         [System.Web.Http.Route("")]
@@ -82,10 +85,102 @@ namespace AspNetMVCApi_PL.Controllers
             }
         }
 
-        // POST api/<controller>
+        // öğrenci güncelleme
+        //HTTPPUT ya da HTTPPost kullanılır.
+        [HttpPut]
+        [System.Web.Http.Route("")]
+        public ResponseData UpdateStudent(int studentId, string name, string surname)
+        {
+            try
+            {
+                if (studentId>0)
+                {
+                    ResponseData result=_studentService.UpdateStudent(studentId, name, surname);
+                    if (result.IsSuccess)
+                    {
+                        return new ResponseData()
+                        {
+                            IsSuccess = true,
+                            Message = " Öğrenci güncelleme işlemi başarılı bir şekilde gerçekleşti."
+                        };
+                    }
+                    else
+                    {
+                        return new ResponseData()
+                        {
+                            IsSuccess = false,
+                            Message = "HATA: Öğrenci güncelleme işleminde beklenmedik bir hata sorun oluştu!"
+                        };
+                    }
+                }
+                else
+                {
+                    return new ResponseData()
+                    {
+                        IsSuccess = false,
+                        Message = "Öğrenci bulunamadı!"
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                // ex loglanabilir
+                return new ResponseData()
+                {
+                    IsSuccess = false,
+                    Message = ex.Message
+                };
+            }
+        }
 
-        // PUT api/<controller>/5
+        [HttpDelete]
+        [System.Web.Http.Route("")]
+        public ResponseData DeleteStudent(int id)
+        {
+            try
+            {
+                if (id>0)
+                {
+                    var result = _studentService.DeleteStudent(id);
+                    if (result.IsSuccess)
+                    {
+                        return new ResponseData()
+                        {
+                            IsSuccess = true,
+                            Message = " Öğrenci sistemden silinmiştir."
+                        };
+                    }
+                    else
+                    {
+                        return new ResponseData()
+                        {
+                            IsSuccess = false,
+                            Message = "HATA: Öğrenci silme işleminde beklenmedik bir hata sorun oluştu!"
+                        };
+                    }
+                }
+                else
+                {
+                    //ex loglanabilir
+                    return new ResponseData()
+                    {
+                        IsSuccess = false,
+                        Message = "HATA: Id girişi düzgün olmalıdır!"
+                    };
 
-        // DELETE api/<controller>/5
+                }
+            }
+            catch (Exception ex)
+            {
+
+                // ex loglanabilir
+                return new ResponseData()
+                {
+                    IsSuccess = false,
+                    Message = ex.Message
+                };
+            }
+        }
+
     }
 }
