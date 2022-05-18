@@ -1,15 +1,18 @@
-﻿using System;
+﻿using Asp.NetMVCApi_BLL.ConractBLL;
+using Asp.NetMVCApi_EL.ViewModels;
+using Asp.NetMVCApi_BLL.ImplementationBLL;
+using Asp.NetMVCApi_DAL;
+using Asp.NetMVCApi_DAL.Contracts;
+using Asp.NetMVCApi_DAL.Implementations;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
-using Asp.NetMVCApi_BLL;
-using Asp.NetMVCApi_BLL.ConractBLL;
-using Asp.NetMVCApi_EL;
-using Asp.NetMVCApi_EL.ViewModels;
 
-namespace AspNetMVC_Api_PL.Controllers
+
+namespace AspNetMVCApi_PL.Controllers
 {
     [System.Web.Http.RoutePrefix("s")]
     public class StudentController : ApiController
@@ -21,8 +24,8 @@ namespace AspNetMVC_Api_PL.Controllers
             _studentService = studentService;
         }
 
-        // GET api/<controller>
-
+        // GET s --> prefix var böyle çağrılır
+        // GET api/student/GetAllStudents
         [System.Web.Http.Route("")]
         public ResponseData GetAllStudents()
         {
@@ -33,7 +36,7 @@ namespace AspNetMVC_Api_PL.Controllers
             }
             catch (Exception ex)
             {
-                //ex loglanabilir
+                // ex loglanabilir
                 return new ResponseData()
                 {
                     IsSuccess = false,
@@ -42,7 +45,42 @@ namespace AspNetMVC_Api_PL.Controllers
             }
         }
 
+
         // GET api/<controller>/5
+
+        //öğrenci ekleme
+        [HttpPost]
+        [System.Web.Http.Route("")]
+        public ResponseData AddStudent([FromBody]StudentVM model)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return new ResponseData()
+                    {
+                        IsSuccess = false,
+                        Message = "Veri girişleri düzgün olmalıdır!"
+                    };
+                }
+                model.RegisterDate = DateTime.Now;
+                ResponseData result = _studentService.AddStudent(model);
+                return new ResponseData()
+                {
+                    IsSuccess = true,
+                    Message = "Yeni öğrenci kaydı yapılmıştır."
+                };
+            }
+            catch (Exception ex)
+            {
+                // ex loglanabilir
+                return new ResponseData()
+                {
+                    IsSuccess = false,
+                    Message = ex.Message
+                };
+            }
+        }
 
         // POST api/<controller>
 
